@@ -18,7 +18,9 @@ unpack() {
 
 pre_build() {
   rm -rf $build_dir &&
-  mv -f $cache/${package}_$version $build_dir
+  mv -f $cache/${package}_$version $build_dir &&
+  message "Patching ${package}_$version" &&
+  patch -d/"$build_dir" -p0 < $base_dir/boost-1_55_0-fs/boost_1_55_0-20220228.patch
 }
 
 build_install() {
