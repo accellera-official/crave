@@ -24,7 +24,6 @@
 //	SOFTWARE.
 ****************************************************************************************/
 
-
 #pragma once
 
 #include "Variable.hpp"
@@ -45,11 +44,13 @@ struct to_constant_expr<T, typename std::enable_if<is_sysc_dt<T>::value>::type> 
  * crv_variable for SystemC data types
  */
 template <typename T>
-class crv_variable<T, typename std::enable_if<is_sysc_dt<T>::value>::type> : public crv_variable_base<T> {
+class crv_variable<T, typename std::enable_if<is_sysc_dt<T>::value>::type> : public crv_var, public crv_variable_base<T> {
   CRV_VARIABLE_COMMON_CONSTRUCTORS(T);
   CRV_VARIABLE_ASSIGNMENT_INTERFACE(T);
   CRV_VARIABLE_ARITHMETIC_INTERFACE(T);
   CRV_VARIABLE_BITWISE_INTERFACE(T);
+
+  crv_constraint c_var_uniform;
 
  public:
   /**
@@ -61,6 +62,47 @@ class crv_variable<T, typename std::enable_if<is_sysc_dt<T>::value>::type> : pub
     this->value = dist.nextValue();
     return true;
   }
+
+  void create_default_cstr () {
+	  create_distribution (T());
+    }
+
+  template <typename L>
+   void create_distribution (const L &tvar, typename std::enable_if<is_signed<L>::value, void>::type* = nullptr) {
+    	  c_var_uniform = {dist(this->var, make_distribution(weighted_range<int64_t>(get_sc_dt_min_numeric_limit(tvar), get_sc_dt_max_numeric_limit(tvar),1)))};
+    }
+
+  template <typename L>
+   void create_distribution (const L &tvar, typename std::enable_if<is_unsigned<L>::value, void>::type* = nullptr) {
+    	  c_var_uniform = {dist(this->var, make_distribution(weighted_range<uint64_t>(get_sc_dt_min_numeric_limit(tvar), get_sc_dt_max_numeric_limit(tvar),1)))};
+    }
+
+
+  template <typename L >
+  int64_t get_sc_dt_min_numeric_limit (const L &var, typename std::enable_if<is_signed<L>::value, void>::type* = nullptr) {
+	  return (int64_t)(-(pow(2,var.length()-1)));
+  }
+
+  template <typename L>
+    int64_t get_sc_dt_max_numeric_limit (const L &var, typename std::enable_if<is_signed<L>::value, void>::type* = nullptr) {
+  	  return (int64_t)(pow(2,var.length()-1) - 1);
+  	}
+
+  template <typename L >
+    uint64_t get_sc_dt_min_numeric_limit(const L &var, typename std::enable_if<is_unsigned<L>::value, void>::type* = nullptr) {
+  	  return (uint64_t)(0);
+  	}
+
+  template <typename L >
+   uint64_t get_sc_dt_max_numeric_limit (const L &var, typename std::enable_if<is_unsigned<L>::value, void>::type* = nullptr) {
+	  return (uint64_t)(pow(2,var.length()) - 1);
+  }
+
+  unsigned getVarID() {
+ 	  return crv_variable_base<T>::id();
+   }
+
+
 };
 
 }  // namespace crave

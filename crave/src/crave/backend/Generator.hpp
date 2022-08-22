@@ -23,8 +23,6 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
 ****************************************************************************************/
-
-
 #pragma once
 
 #include <string>
@@ -37,7 +35,7 @@ namespace crave {
 
 /*!
  * \brief Backend generator to generate random values with constraints.
- * 
+ *
  * Try to avoid usage of this class directly.
  * CRAVE usually uses this class internally.
  */
@@ -145,6 +143,7 @@ struct Generator {
 
   void addVecId(int id) { to_be_generated_vec_ids_.insert(id); }
 
+  VariableContainer* getVarCtn ();
  private:
   // constraints
   ConstraintManager constr_mng_;

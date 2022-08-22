@@ -24,15 +24,24 @@
 //	SOFTWARE.
 ****************************************************************************************/
 
-
 #include "../../crave/experimental/Experimental.hpp"
-
+#include "../../crave/ir/VariableContainer.hpp"
+#include <iostream>
 namespace crave {
 
 prev_ prev;
+struct VariableContainer;
+
 
 void crv_object::recursive_build(Generator& gen) const {
-  for (crv_object* obj : children_) obj->recursive_build(gen);
+
+  for (crv_object* obj : children_) {
+	  obj->recursive_build(gen);
+  }
+}
+
+VariableContainer* crv_object::check_default_constraints(Generator& gen) {
+	return gen.getVarCtn();
 }
 
 };  // namespace crave

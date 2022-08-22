@@ -24,7 +24,6 @@
 //	SOFTWARE.
 ****************************************************************************************/
 
-
 #pragma once
 
 #include "Coverage.hpp"
@@ -83,6 +82,8 @@ class crv_sequence_item : public crv_object {
    * \param group The crv_covergroup that should be fully covered by CRAVE.
    */
   void goal(crv_covergroup& group);
+
+  void crosscheck_constraints ();
 
  protected:
   void request_rebuild() override;

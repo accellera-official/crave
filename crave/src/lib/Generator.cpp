@@ -108,4 +108,5 @@ std::ostream& Generator::printDotGraph(std::ostream& os, bool root) {
 std::vector<std::vector<std::string> > Generator::analyseContradiction() { return var_gen_->analyseContradiction(); }
 
 std::vector<std::string> Generator::getInactiveSofts() { return var_gen_->getInactiveSofts(); }
+VariableContainer* Generator:: getVarCtn () {return var_ctn_;}
 }

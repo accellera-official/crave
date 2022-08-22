@@ -24,13 +24,16 @@
 //	SOFTWARE.
 ****************************************************************************************/
 
-
 #pragma once
 
 #include "VariableBase.hpp"
+#include "../frontend/Operators.hpp"
+#include "../frontend/WeightedRange.hpp"
 
 #include "../frontend/Distribution.hpp"
 #include "../ir/UserExpression.hpp"
+#include "Constraint.hpp"
+
 
 namespace crave {
 
@@ -68,7 +71,7 @@ distribution_tag<T> make_distribution(weighted_range<T> const& range, Args... ar
  */
 #define CRV_VARIABLE_COMMON_CONSTRUCTORS(Typename) \
  public:                                           \
-  crv_variable(crv_object_name name = "var") {}    \
+  crv_variable(crv_object_name name = "var") {create_default_cstr ();}   \
   crv_variable(const crv_variable& other) : crv_variable_base<Typename>(other) {}
 
 /**
@@ -189,20 +192,31 @@ distribution_tag<T> make_distribution(weighted_range<T> const& range, Args... ar
  * If two variables are bound together, they share the same value.
  * </p>
 */ 
+
+
+class crv_var {
+	public:
+		virtual ~crv_var() {}
+		virtual unsigned getVarID() = 0;
+};
+
 template <typename T, typename Enable = void>
 class crv_variable {};
 
 /**
  * class for randomisation of a variable
  */
-template <typename T>
-class crv_variable<T, typename std::enable_if<std::is_integral<T>::value>::type> : public crv_variable_base<T> {
+template <typename T >
+class crv_variable<T, typename std::enable_if<std::is_integral<T>::value>::type> : public crv_var, public crv_variable_base<T> {
   CRV_VARIABLE_COMMON_CONSTRUCTORS(T);
   CRV_VARIABLE_ASSIGNMENT_INTERFACE(T);
   CRV_VARIABLE_ARITHMETIC_INTERFACE(T);
   CRV_VARIABLE_BITWISE_INTERFACE(T);
 
+  crv_constraint c_var_uniform;
+
  public:
+
   /**
    * generate random value
    */
@@ -211,7 +225,47 @@ class crv_variable<T, typename std::enable_if<std::is_integral<T>::value>::type>
     this->value = dist.nextValue();
     return true;
   }
+
+  void create_default_cstr () {
+	 c_var_uniform = { dist(this->var, make_distribution(range<T>(std::numeric_limits<T>::min(), std::numeric_limits<T>::max())))};
+  }
+  
+  unsigned getVarID() {
+	  return crv_variable_base<T>::id();
+  }
 };
+
+
+/**
+ * class for randomisation of a variable
+ */
+template <>
+class crv_variable<bool> : public crv_var, public crv_variable_base<bool> {
+  CRV_VARIABLE_COMMON_CONSTRUCTORS(bool);
+  CRV_VARIABLE_ASSIGNMENT_INTERFACE(bool);
+  //CRV_VARIABLE_ARITHMETIC_INTERFACE(bool);
+  CRV_VARIABLE_BITWISE_INTERFACE(bool);
+
+  crv_constraint c_var_uniform;
+ public:
+  /**
+   * generate random value
+   */
+  bool randomize() override {
+    static distribution<bool> dist;
+    this->value = dist.nextValue();
+    return true;
+  }
+
+  void create_default_cstr () {
+	  c_var_uniform = { dist(this->var, distribution<bool>::create(0.5))};
+  }
+
+  unsigned getVarID() {
+  	  return crv_variable_base<bool>::id();
+    }
+};
+
 
 template <typename T>
 struct bitsize_traits<crv_variable<T>> : public bitsize_traits<T> {};
