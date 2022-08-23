@@ -24,7 +24,6 @@
 //	SOFTWARE.
 ****************************************************************************************/
 
-
 #pragma once
 
 #include <sysc/datatypes/bit/sc_bv.h>
@@ -47,6 +46,15 @@ struct is_signed<sc_dt::sc_int<N> > : boost::mpl::true_ {};
 
 template <int N>
 struct is_signed<sc_dt::sc_uint<N> > : boost::mpl::false_ {};
+
+template <int N>
+struct is_unsigned<sc_dt::sc_bv<N> > : boost::mpl::true_ {};
+
+template <int N>
+struct is_unsigned<sc_dt::sc_int<N> > : boost::mpl::false_ {};
+
+template <int N>
+struct is_unsigned<sc_dt::sc_uint<N> > : boost::mpl::true_ {};
 
 template <typename T, int N = 0>
 struct is_sysc_dt : boost::mpl::false_ {};

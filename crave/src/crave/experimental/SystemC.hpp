@@ -68,33 +68,33 @@ class crv_variable<T, typename std::enable_if<is_sysc_dt<T>::value>::type> : pub
     }
 
   template <typename L>
-   void create_distribution (const L &tvar, typename std::enable_if<std::is_signed<L>::value, void>::type* = nullptr) {
+   void create_distribution (const L &tvar, typename std::enable_if<is_signed<L>::value, void>::type* = nullptr) {
     	  c_var_uniform = {dist(this->var, make_distribution(weighted_range<int64_t>(get_sc_dt_min_numeric_limit(tvar), get_sc_dt_max_numeric_limit(tvar),1)))};
     }
 
   template <typename L>
-   void create_distribution (const L &tvar, typename std::enable_if<std::is_unsigned<L>::value, void>::type* = nullptr) {
+   void create_distribution (const L &tvar, typename std::enable_if<is_unsigned<L>::value, void>::type* = nullptr) {
     	  c_var_uniform = {dist(this->var, make_distribution(weighted_range<uint64_t>(get_sc_dt_min_numeric_limit(tvar), get_sc_dt_max_numeric_limit(tvar),1)))};
     }
 
 
   template <typename L >
-  int64_t get_sc_dt_min_numeric_limit (const L &var, typename std::enable_if<std::is_signed<L>::value, void>::type* = nullptr) {
+  int64_t get_sc_dt_min_numeric_limit (const L &var, typename std::enable_if<is_signed<L>::value, void>::type* = nullptr) {
 	  return (int64_t)(-(pow(2,var.length()-1)));
   }
 
   template <typename L>
-    int64_t get_sc_dt_max_numeric_limit (const L &var, typename std::enable_if<std::is_signed<L>::value, void>::type* = nullptr) {
+    int64_t get_sc_dt_max_numeric_limit (const L &var, typename std::enable_if<is_signed<L>::value, void>::type* = nullptr) {
   	  return (int64_t)(pow(2,var.length()-1) - 1);
   	}
 
   template <typename L >
-    uint64_t get_sc_dt_min_numeric_limit(const L &var, typename std::enable_if<std::is_unsigned<L>::value, void>::type* = nullptr) {
+    uint64_t get_sc_dt_min_numeric_limit(const L &var, typename std::enable_if<is_unsigned<L>::value, void>::type* = nullptr) {
   	  return (uint64_t)(0);
   	}
 
   template <typename L >
-   uint64_t get_sc_dt_max_numeric_limit (const L &var, typename std::enable_if<std::is_unsigned<L>::value, void>::type* = nullptr) {
+   uint64_t get_sc_dt_max_numeric_limit (const L &var, typename std::enable_if<is_unsigned<L>::value, void>::type* = nullptr) {
 	  return (uint64_t)(pow(2,var.length()) - 1);
   }
 

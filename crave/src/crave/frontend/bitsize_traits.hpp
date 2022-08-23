@@ -24,7 +24,6 @@
 //	SOFTWARE.
 ****************************************************************************************/
 
-
 #pragma once
 
 #include <boost/mpl/int.hpp>
@@ -32,6 +31,7 @@
 #include <boost/mpl/times.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/is_unsigned.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace crave {
@@ -112,6 +112,8 @@ struct is_crave_variable<write_ref_tag<T> > : boost::mpl::true_ {};
 template <typename T>
 struct is_signed : public boost::is_signed<T> {};
 
+template <typename T>
+struct is_unsigned : public boost::is_unsigned<T> {};
 /**
  * assume bool to be signed (i.e. will be converted to signed bv)
  */
