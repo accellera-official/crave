@@ -32,7 +32,7 @@ cmake_minimum_required(VERSION 2.8.9)
 set(${PROJECT_NAME}_CONFIG_DIR "share/${PROJECT_NAME}" CACHE PATH 
   "where to install CMake and Make Config files")
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 ############################################################
 ##                CRAVE settings                          ##
 ############################################################
