@@ -1,6 +1,6 @@
-/****************************************************************************************
+//****************************************************************************************
 //	MIT License
-//***************************************************************************************
+//****************************************************************************************
 //	Copyright (c) 2012-2020 University of Bremen, Germany. 
 //  	Copyright (c) 2015-2020 DFKI GmbH Bremen, Germany.
 //  	Copyright (c) 2020 Johannes Kepler University Linz, Austria.
@@ -22,7 +22,7 @@
 //	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
-****************************************************************************************/
+//****************************************************************************************
 
 #define BOOST_TEST_MODULE Cudd
 #include <crave/ConstrainedRandom.hpp>
