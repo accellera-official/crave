@@ -277,6 +277,12 @@ struct Context : boost::proto::callable_context<Context, boost::proto::null_cont
     return new Constant(i, width, sign);
   }
 
+  static result_type new_value(bool const& i) {
+    unsigned width = bitsize_traits<bool>::value;
+    bool sign = crave::is_signed<bool>::value;
+    return new Constant(i, width, sign);
+  }
+
   template <typename Integer>
   result_type operator()(boost::proto::tag::terminal, Integer const& i) {
     return new_value<Integer>(i);
