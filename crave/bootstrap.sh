@@ -263,8 +263,7 @@ if [ -z "$DL_ONLY" ]; then
     -DBOOST_ROOT="$BOOST_ROOT" \
     -DWITH_SYSTEMC="$WITH_SYSTEMC" \
     -DSYSTEMC_HOME="$SYSTEMC_HOME" \
-    -DGLOG_ROOT="$GLOG_ROOT" \
-    -DCMAKE_BUILD_TYPE="Release"
+    -DGLOG_ROOT="$GLOG_ROOT"
   echo "finished bootstrap, you can now call make in $BUILD_DIR"
 fi
 
