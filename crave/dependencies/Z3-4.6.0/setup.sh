@@ -1,9 +1,9 @@
 #!/bin/sh
 
+package=z3
+package_capital=Z3
 version=4.6.0
-branch=z3-4.6.0
-
-cmake_files_dir=$base_dir/Z3-git
+cmake_files_dir=$base_dir/$package_capital-git
 
 if [ -z "$build" ] ; then 
   echo '$build is undefined'
@@ -14,28 +14,24 @@ if [ -z "$package_dir" ] ; then
   exit 1
 fi
 
-package=Z3
 source=nosourcefile
-build_dir=$build/$package-$version
-url='https://github.com/Z3Prover/z3.git'
+build_dir=$build/$package_capital-$version
 
 download() {
-  mkdir -p $cache/$package-$version &&
-  cd $cache/$package-$version &&
-  if [ -d .git ]; then
-    git pull
-  else
-    git clone -b $branch $url --single-branch --depth=1 .
-  fi
+  cd $cache &&
+  curl -L -O https://github.com/Z3Prover/$package/archive/refs/tags/$package-$version.tar.gz
 }
 
 unpack() {
-  cp -R $cache/$package-$version $build_dir
+  rm -fR $build_dir &&
+  cd $cache &&
+  tar zxf $package-$version.tar.gz &&
+  cp -R $cache/$package-$package-$version $build_dir
 }
   
 pre_build() 
 {
-  patch -d/"$build_dir" -p0 < $base_dir/Z3-4.6.0/z3-z3-4.6.0__permutation_matrix.patch
+  patch -d $build_dir -p0 < $base_dir/$package_capital-$version/$package-$package-$version\__permutation_matrix.patch
 }
  
 build_install() {
