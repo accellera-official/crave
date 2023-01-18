@@ -1,6 +1,6 @@
-/****************************************************************************************
+//****************************************************************************************
 //	MIT License
-//***************************************************************************************
+//****************************************************************************************
 //	Copyright (c) 2012-2020 University of Bremen, Germany. 
 //  	Copyright (c) 2015-2020 DFKI GmbH Bremen, Germany.
 //  	Copyright (c) 2020 Johannes Kepler University Linz, Austria.
@@ -22,7 +22,7 @@
 //	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
-****************************************************************************************/
+//****************************************************************************************
 
 #pragma once
 
@@ -161,6 +161,26 @@ distribution_tag<T> make_distribution(weighted_range<T> const& range, Args... ar
     return *this;                                   \
   }
 
+/**
+ * boolean operators
+ * @param i value for bitwise operation
+ */
+#define CRV_VARIABLE_BOOLEAN_INTERFACE(Typename)    \
+ public:                                            \
+  crv_variable<Typename>& operator&=(Typename i) {  \
+    this->value &= i;                               \
+    return *this;                                   \
+  }                                                 \
+  crv_variable<Typename>& operator|=(Typename i) {  \
+    this->value |= i;                               \
+    return *this;                                   \
+  }                                                 \
+  crv_variable<Typename>& operator^=(Typename i) {  \
+    this->value ^= i;                               \
+    return *this;                                   \
+  }                                                 \
+
+
 /*!
  *\ingroup newAPI
  *\brief A randomizable variable of type T in new API.
@@ -244,7 +264,7 @@ class crv_variable<bool> : public crv_var, public crv_variable_base<bool> {
   CRV_VARIABLE_COMMON_CONSTRUCTORS(bool);
   CRV_VARIABLE_ASSIGNMENT_INTERFACE(bool);
   //CRV_VARIABLE_ARITHMETIC_INTERFACE(bool);
-  CRV_VARIABLE_BITWISE_INTERFACE(bool);
+  CRV_VARIABLE_BOOLEAN_INTERFACE(bool);
 
   crv_constraint c_var_uniform;
  public:
