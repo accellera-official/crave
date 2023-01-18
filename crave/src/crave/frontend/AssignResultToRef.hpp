@@ -93,4 +93,33 @@ struct AssignResultToRef : AssignResult {
  protected:
   T* value_;
 };
+
+/**
+ * Implements AssignResult to assign value to a pointer (boolean specialization)
+ */
+template <>
+struct AssignResultToRef<bool> : AssignResult {
+ public:
+  explicit AssignResultToRef(bool* ref) : value_(ref) {}
+
+ public:
+  Constant value_as_constant() const { return to_constant_expr<bool>()(*value_); }
+
+  Constant to_constant(std::string const& str) const {
+    bool v;
+    set_value(str, &v);
+    return to_constant_expr<bool>()(v);
+  }
+
+  void set_value(std::string const& str) { set_value(str, value_); }
+
+ private:
+  void set_value(std::string const& str, bool* val) const {
+    *val = ((crave::is_signed<bool>::value && str[0] == '1') ? true : false);
+  }
+
+ protected:
+  bool* value_;
+};
+
 }  // namespace crave
