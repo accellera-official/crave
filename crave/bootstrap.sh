@@ -36,7 +36,7 @@ $0 sets up a CRAVE build folder.
 usage: $0 [--free] [--non-free] build
   --boost=/p/t/b    use this version of the Boost libraries
   --backend val     use the backend val, following backends can be
-   -b val           activated: boolector, cvc4, stp, sword, yices2, z3 and cudd
+   -b val           activated: z3 and cudd
   --systemc         build SystemC
   --systemc=/p/t/s  use this version of SystemC
   --clean           delete build folder before creating a new one
@@ -90,7 +90,7 @@ if [[ "$CLEAN" ]]; then
   rm -rf $BUILD_DIR
 fi
 
-BACKENDS="${BACKENDS:-boolector cvc4 stp sword yices2 z3 cudd}"
+BACKENDS="${BACKENDS:-z3 cudd}"
 echo "activated backends are: $BACKENDS"
 
 if [[ "$CRAVE_OFFLINE_BUILD" = "ON" ]]; then

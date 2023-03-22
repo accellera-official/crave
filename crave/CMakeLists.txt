@@ -32,7 +32,7 @@ cmake_minimum_required(VERSION 2.8.9)
 set(${PROJECT_NAME}_CONFIG_DIR "share/${PROJECT_NAME}" CACHE PATH 
   "where to install CMake and Make Config files")
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 ############################################################
 ##                CRAVE settings                          ##
 ############################################################
@@ -44,11 +44,22 @@ option(CRAVE_BUILD_EXAMPLES      "build and test examples" on)
 ### C++11 required
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-if(COMPILER_SUPPORTS_CXX11)
-  add_definitions(-std=c++11)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.1)
+      if(COMPILER_SUPPORTS_CXX11)
+          add_definitions(-std=c++11)
+      else()
+          message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} does not support -std=c++11. Please use a different C++ compiler.")
+      endif()
+    endif()
 else()
-  message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} does not support -std=c++11. Please use a different C++ compiler.")
+    if(COMPILER_SUPPORTS_CXX11)
+        add_definitions(-std=c++11)
+    else()
+        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} does not support -std=c++11. Please use a different C++ compiler.")
+    endif()
 endif()
+
 if (MINGW)
   add_definitions(-Wa,-mbig-obj)
 endif()

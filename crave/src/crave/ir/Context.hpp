@@ -1,6 +1,6 @@
-/****************************************************************************************
+//****************************************************************************************
 //	MIT License
-//***************************************************************************************
+//****************************************************************************************
 //	Copyright (c) 2012-2020 University of Bremen, Germany. 
 //  	Copyright (c) 2015-2020 DFKI GmbH Bremen, Germany.
 //  	Copyright (c) 2020 Johannes Kepler University Linz, Austria.
@@ -22,7 +22,7 @@
 //	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
-****************************************************************************************/
+//****************************************************************************************
 
 
 #pragma once
@@ -274,6 +274,12 @@ struct Context : boost::proto::callable_context<Context, boost::proto::null_cont
       for (unsigned int j = 1; j < width; ++j)
         if ((i >> j) == 0) return new Constant(i, j, false);
     }
+    return new Constant(i, width, sign);
+  }
+
+  static result_type new_value(bool const& i) {
+    unsigned width = bitsize_traits<bool>::value;
+    bool sign = crave::is_signed<bool>::value;
     return new Constant(i, width, sign);
   }
 

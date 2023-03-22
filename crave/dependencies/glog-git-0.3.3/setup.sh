@@ -37,8 +37,8 @@ build_install() {
   fi
   cd "$build_dir" &&
 
-  ./autogen.sh && ./configure --prefix="$target" &&
-  make -j && make install
+  cmake -S . -B build -G "Unix Makefiles" &&
+  cmake --build build
 }
 
 # vim: ts=2 sw=2 et
