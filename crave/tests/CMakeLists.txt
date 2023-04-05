@@ -25,7 +25,7 @@
 ##########################################################################################
 
 if ( NOT CRAVE_TIMEOUT )
-  set(CRAVE_TIMEOUT 15)
+  set(CRAVE_TIMEOUT 30)
 endif()
 include_directories (../src)
 

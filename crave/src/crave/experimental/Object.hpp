@@ -4,6 +4,7 @@
 //	Copyright (c) 2012-2020 University of Bremen, Germany. 
 //  	Copyright (c) 2015-2020 DFKI GmbH Bremen, Germany.
 //  	Copyright (c) 2020 Johannes Kepler University Linz, Austria.
+//    Copyright (c) 2022 - 2023 Coseda Technologies GmbH.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +25,6 @@
 //	SOFTWARE.
 //****************************************************************************************
 
-
 #pragma once
 
 #include <iostream>
@@ -32,17 +32,19 @@
 #include <string>
 #include <unordered_map>
 
+
 namespace crave {
 
 struct Generator;
 
 struct crv_object_name;
 class crv_object;
+struct VariableContainer;
 
 /**
  * \ingroup newAPI
  * \brief Class for names of CRAVE objects.
- * 
+ *
  * This class is a type safe class to wrap the name of an object in CRAVE.
  */
 struct crv_object_name {
@@ -96,21 +98,21 @@ class crv_object {
 
   /**
    * \brief Return the type of the object as a string.
-   * 
+   *
    * The type is most likely the name of the class the object is made from.
-   * 
+   *
    * \return Type of the object as a string.
    */
   virtual std::string obj_kind() const { return "crv_object"; }
-  
+
   /**
    * \brief Randomizes the variables in this object.
-   * 
+   *
    * The variables must be of type crv_variable in order to be randomized.
    * While randomizing, all constraints that are part of the object will be used to get a solution.
    * These constraints may produce contradicts and cannot be solved.
    * In that case, this method returns false.
-   * 
+   *
    * \return true if a solution is found, false otherwise.
    */
   virtual bool randomize() { return false; }
@@ -136,7 +138,6 @@ class crv_object {
    * get the root object of the hierarchy
    */
   static crv_object* root();
-
   /**
    * find the object with a given name
    */
@@ -147,7 +148,7 @@ class crv_object {
    */
   static unsigned count();
 
- protected:
+ public:
   /**
    * copy constructor
    */
@@ -161,6 +162,8 @@ class crv_object {
   }
 
   virtual void recursive_build(Generator& gen) const;
+
+  virtual VariableContainer* check_default_constraints(Generator& gen);
 
   std::string name_;                                         /** < name of the object*/
   std::string orig_name_;                                    /** < original name of the object*/

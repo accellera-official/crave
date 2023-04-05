@@ -4,6 +4,7 @@
 //	Copyright (c) 2012-2020 University of Bremen, Germany. 
 //  	Copyright (c) 2015-2020 DFKI GmbH Bremen, Germany.
 //  	Copyright (c) 2020 Johannes Kepler University Linz, Austria.
+//    Copyright (c) 2022 - 2023 Coseda Technologies GmbH.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +24,6 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
 //****************************************************************************************
-
 
 #pragma once
 
@@ -47,6 +47,15 @@ struct is_signed<sc_dt::sc_int<N> > : boost::mpl::true_ {};
 
 template <int N>
 struct is_signed<sc_dt::sc_uint<N> > : boost::mpl::false_ {};
+
+template <int N>
+struct is_unsigned<sc_dt::sc_bv<N> > : boost::mpl::true_ {};
+
+template <int N>
+struct is_unsigned<sc_dt::sc_int<N> > : boost::mpl::false_ {};
+
+template <int N>
+struct is_unsigned<sc_dt::sc_uint<N> > : boost::mpl::true_ {};
 
 template <typename T, int N = 0>
 struct is_sysc_dt : boost::mpl::false_ {};

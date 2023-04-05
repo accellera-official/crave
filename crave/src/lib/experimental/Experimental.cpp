@@ -4,6 +4,7 @@
 //	Copyright (c) 2012-2020 University of Bremen, Germany. 
 //  	Copyright (c) 2015-2020 DFKI GmbH Bremen, Germany.
 //  	Copyright (c) 2020 Johannes Kepler University Linz, Austria.
+//      Copyright (c) 2022 - 2023 Coseda Technologies GmbH.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +25,24 @@
 //	SOFTWARE.
 //****************************************************************************************
 
-
 #include "../../crave/experimental/Experimental.hpp"
-
+#include "../../crave/ir/VariableContainer.hpp"
+#include <iostream>
 namespace crave {
 
 prev_ prev;
+struct VariableContainer;
+
 
 void crv_object::recursive_build(Generator& gen) const {
-  for (crv_object* obj : children_) obj->recursive_build(gen);
+
+  for (crv_object* obj : children_) {
+	  obj->recursive_build(gen);
+  }
+}
+
+VariableContainer* crv_object::check_default_constraints(Generator& gen) {
+	return gen.getVarCtn();
 }
 
 };  // namespace crave
