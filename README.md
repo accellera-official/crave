@@ -1,43 +1,47 @@
-# CRAVE2UVM prototype
+# Constrained RAndom Verification Enviroment (CRAVE)
 
-This projects contains a prototypical integration of CRAVE with UVM-SystemC to provide access to constrained randomization and coverage.
-For demonstration, we ported the SystemVerilog example UBUS to UVM-SystemC and included it in this distribution.
+### About CRAVE
 
-## Requirements
+To introduce constrained randomization features, the CRAVE library can be used in combination with UVM-SystemC. The syntax of CRAVE has been designed to naturally fit with C++ and SystemC. The CRAVE library includes modern BDD-based and SAT/SMT-based constraint solvers.
 
-Make sure all pre install requirements of CRAVE and UVM-SystemC are met:
+This version of CRAVE is the reference implementation provided by the [Accellera Systems Initiative][1] and is developed by the [SystemC Verification Working Group][2].
 
-* CMake (at least v2.8.9)
-* GNU Make
-* g++ (at least v4.7.2)
-* SystemC (the environment variable SYSTEMC_HOME must be set accordingly)
-* Boost (at least v1.50.0 and the environment variable BOOST_ROOT must be set accordingly)
-* zlib development libraries (e.g. zlib1g-dev).
+-------------------------------------------------------------------------------
 
-The version of CRAVE included in this distribution by default will build a minimal configuration (Glog and 2 solver backends: CUDD and Z3). 
-Other configurations with additional backends (e.g. Boolector, SWORD, CVC4, etc.) are also possible. 
-If download is permitted, CRAVE can automatically download and build these backends.
-Otherwise, the user needs to provide appropriate source or binary archive in deps/cache.
-For more detailed instructions , please refer to the CRAVE README or contact us.
+### Licensing and Copyright
 
-## Installation
+See the separate [LICENSE](LICENSE) and [NOTICE](NOTICE) files to determine your rights and responsiblities for using CRAVE.
 
-To install and run the example, use the buildscript on the toplevel of this repository. It currently executes three common tasks:
+### User Documentation
 
-1. ./buildscript install: this will install CRAVE (shipped with this distribution) into ./crave, locally compiles UVM-SystemC into ../.. and setup the Makefile for the example "Ubus".
+The main documentation of CRAVE can be found in the [doc](doc) directory.
 
-2. ./buildscript compile: this will compile the example and put the executables into build/bin.
+### Installation and Usage
 
-3. ./buildscript run: this will run the Ubus example.
+See the separate [INSTALL](INSTALL.md) file that provides system information and installation instructions.
 
-## Tested OS
+### SystemC Verification Community
 
-This distribution has been tested on the following 64-bit Linux (x86_64) systems:
+  * SystemC community website  
+    https://systemc.org
 
-* Fedora 22 with g++-5.3.1
-* Ubuntu 14.04.4 LTS with g++-4.8.4
-* Debian 7.0 with g++-4.7.2
+  * SystemC Verification discussion forum (UVM-SystemC, SCV, CRAVE, FC4SC)  
+    https://forums.accellera.org/forum/38-systemc-verification-uvm-systemc-scv-crave-fc4sc/
 
-## Contact
-For bugreport and feedback: crave@systemc-verification.org
+-------------------------------------------------------------------------------
 
+### About Accellera SystemC Working Groups
+
+Accellera's [SystemC Working Groups][3] are responsible for the definition and development of the SystemC Core and Transaction Level Modeling (TLM) language, including extensions for analog/mixed-signal (AMS), control, configuration, and inspection (CCI), sythesis and verification. Participants of these working groups include member companies and industry contributors. Technical contributors typically have many years of practical experience with IC and system-level design as well as developing system-level design methodologies and using EDA tools.
+
+### About Accellera Systems Initiative
+
+[Accellera Systems Initiative][1] is an independent, not-for profit organization dedicated to create, support, promote and advance system-level design, modeling and verification standards for use by the worldwide electronics industry.  The organization accelerates standards development and, as part of its ongoing partnership with the IEEE, its standards are contributed to the IEEE Standards Association for formal standardization and ongoing change control. For more information, please visit [www.accellera.org][1]. Find out more about [membership][4]. Follow [@accellera][5] on Twitter or to comment, please use `#accellera`.
+
+_Accellera, Accellera Systems Initiative and SystemC are trademarks of  Accellera Systems Initiative Inc. All other trademarks and trade names are the property of their respective owners._
+
+[1]: https://accellera.org
+[2]: https://www.accellera.org/activities/working-groups/systemc-verification
+[3]: https://www.accellera.org/activities/working-groups
+[4]: https://accellera.org/about/join/
+[5]: https://twitter.com/accellera
