@@ -129,12 +129,12 @@ struct crv_transition_fsm_state : std::enable_shared_from_this<crv_transition_fs
   }
 
  private:
+  nodeType type;
   std::shared_ptr<crv_transition_fsm_state> succ; // successor state
   std::shared_ptr<crv_transition_fsm_state> prev; // previous state
   expression expr;
   int minHit;
   int maxHit;
-  nodeType type;
 
   template <typename Expr>
   crv_transition_fsm_state(Expr nodeExpr, nodeType pType = CONSEC)
@@ -184,6 +184,8 @@ class crv_abstract_bin {
      * \return true if the bin is covered, false otherwise.
      */
   bool covered() { return hit_count_ >= hit_minimum_; }
+
+  virtual ~crv_abstract_bin(){};
 
  protected:
   crv_abstract_bin(unsigned phit_minimum_ = 1, unsigned phit_count_ = 0)
