@@ -99,7 +99,7 @@ class crv_variable<T, typename std::enable_if<is_sysc_dt<T>::value>::type> : pub
 	  return (uint64_t)(pow(2,var.length()) - 1);
   }
 
-  unsigned getVarID() {
+  unsigned getVarID() override {
  	  return crv_variable_base<T>::id();
    }
 

@@ -251,7 +251,7 @@ class crv_variable<T, typename std::enable_if<std::is_integral<T>::value>::type>
 	 c_var_uniform = { dist(this->var, make_distribution(range<T>(std::numeric_limits<T>::min(), std::numeric_limits<T>::max())))};
   }
   
-  unsigned getVarID() {
+  unsigned getVarID() override {
 	  return crv_variable_base<T>::id();
   }
 };
@@ -282,7 +282,7 @@ class crv_variable<bool> : public crv_var, public crv_variable_base<bool> {
 	  c_var_uniform = { dist(this->var, distribution<bool>::create(0.5))};
   }
 
-  unsigned getVarID() {
+  unsigned getVarID() override {
   	  return crv_variable_base<bool>::id();
     }
 };
