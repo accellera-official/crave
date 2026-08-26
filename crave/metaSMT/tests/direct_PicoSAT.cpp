@@ -29,11 +29,10 @@
 #include <metaSMT/backend/PicoSAT.hpp>
 #include <metaSMT/BitBlast.hpp>
 
-using namespace metaSMT::solver;
 using namespace metaSMT;
 struct Solver_Fixture
 {
-  typedef DirectSolver_Context<BitBlast<SAT_Clause<PicoSAT> > > ContextType;
+  typedef DirectSolver_Context<BitBlast<SAT_Clause<metaSMT::solver::PicoSAT> > > ContextType;
   ContextType ctx;
 };
 

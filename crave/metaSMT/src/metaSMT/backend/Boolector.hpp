@@ -29,7 +29,7 @@
 #include "../result_wrapper.hpp"
 
 extern "C" {
-#include <boolector.h>
+#include <boolector/boolector.h>
 }
 
 #include <boost/mpl/map/map40.hpp>

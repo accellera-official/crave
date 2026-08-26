@@ -27,7 +27,7 @@
 #include <crave/experimental/SystemC.hpp>
 #include <crave/ConstrainedRandom.hpp>
 #include <systemc.h>
-#include <boost/timer.hpp>
+#include <chrono>
 #include <crave/experimental/Experimental.hpp>
 
 using crave::crv_sequence_item;
@@ -68,14 +68,23 @@ struct ALU12 : public crv_sequence_item {
 
 int sc_main(int argc, char** argv) {
   crave::init("crave.cfg");
-  boost::timer timer;
+  auto start = std::chrono::steady_clock::now();
+  
   ALU12 c("ALU");
   CHECK(c.randomize());
-  std::cout << "first: " << timer.elapsed() << "\n";
+  
+  // Measure elapsed time after the first CHECK
+  auto end_first = std::chrono::steady_clock::now();
+  std::chrono::duration<double> elapsed_first = std::chrono::duration_cast<std::chrono::duration<double>>(end_first - start);
+  std::cout << "first: " << elapsed_first.count() << "\n";
+
   for (int i = 0; i < 1000; ++i) {
     CHECK(c.randomize());
     std::cout << c << std::endl;
   }
-  std::cout << "complete: " << timer.elapsed() << "\n";
+
+  auto end_complete = std::chrono::steady_clock::now();
+  std::chrono::duration<double> elapsed_complete = std::chrono::duration_cast<std::chrono::duration<double>>(end_complete - start);
+  std::cout << "complete: " << elapsed_complete.count() << "\n";
   return 0;
 }

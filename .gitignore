@@ -6,5 +6,9 @@ deps*/
 lcov_output/
 logs/
 doc/crave-doxygen/
-crave_package_deps.tar.gz
-
+crave2uvm_build.log
+/*.tar.gz
+/*.log
+.venv
+/venv/
+/.direnv/

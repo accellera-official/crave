@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+
+find_package(GMP)
+
+if(NOT TARGET yices2::yices2)
+    include("${CMAKE_CURRENT_LIST_DIR}/yices2-targets.cmake")
+    add_library(yices2::yices2 ALIAS yices2)
+endif()
+
+set(yices2_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include")
+set(yices2_lIBRARIES yices2::yices2)

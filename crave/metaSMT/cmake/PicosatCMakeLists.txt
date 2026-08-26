@@ -1,0 +1,96 @@
+project(PicoSAT)
+
+cmake_minimum_required(VERSION 3.16)
+
+set(STATIC_OR_SHARED SHARED CACHE STRING "Build STATIC or SHARED libaries")
+
+file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION PicoSAT_VERSION)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h
+"#define PICOSAT_CC \"${CMAKE_C_COMPILER}\"
+#define PICOSAT_CFLAGS \"${CMAKE_C_FLAGS}\"
+#define PICOSAT_VERSION \"${PicoSAT_VERSION}\"
+")
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+add_library(picosat  
+  ${STATIC_OR_SHARED}
+  picosat.c
+  version.c
+)
+target_include_directories(picosat INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+
+add_executable(PicoSAT_picosat
+  picosat.c
+  version.c
+  app.c
+  main.c
+)
+SET_TARGET_PROPERTIES( PicoSAT_picosat PROPERTIES
+  OUTPUT_NAME picosat
+)
+
+add_executable(PicoSAT_picomus
+  picomus.c
+  picosat.c
+  version.c
+)
+SET_TARGET_PROPERTIES( PicoSAT_picomus PROPERTIES
+  OUTPUT_NAME picomus
+)
+  
+# install the target
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+set(picosat_CMAKE_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/picosat)
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/picosat.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/picosat
+)
+install(TARGETS 
+  picosat
+  PicoSAT_picosat
+  PicoSAT_picomus EXPORT picosat-targets)
+
+install(
+  EXPORT picosat-targets
+  DESTINATION ${picosat_CMAKE_CONFIG_DIR}
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/picosat-config-version.cmake
+    VERSION ${PicoSAT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+
+# Generate the config file content
+set(CONFIG_CONTENT "
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET picosat)
+    include(\"\${CMAKE_CURRENT_LIST_DIR}/picosat-targets.cmake\")
+    add_library(picosat::picosat ALIAS picosat)
+endif()
+
+set(picosat_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include\")
+set(picosat_LIBRARIES picosat::picosat)
+")
+
+# Write the content to the config file
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/picosat-config.cmake.in ${CONFIG_CONTENT})
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/picosat-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/picosat-config.cmake
+    INSTALL_DESTINATION ${picosat_CMAKE_CONFIG_DIR}
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/picosat-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/picosat-config-version.cmake
+    DESTINATION ${picosat_CMAKE_CONFIG_DIR})

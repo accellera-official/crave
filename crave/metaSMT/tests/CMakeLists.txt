@@ -24,26 +24,25 @@
 
 include(CMakeParseArguments)
 
-include_directories(../src ${metaSMT_INCLUDES})
-
 # From v1.59.0 Boost.Test does not require RTTI
-if (${Boost_VERSION} VERSION_LESS 105900)
-  message( STATUS "Compile metaSMT tests with RTTI" )
+if (Boost_VERSION VERSION_LESS 105900)
+  message(STATUS "Compile metaSMT tests with RTTI")
 else()
-  CHECK_CXX_COMPILER_FLAG("-fno-rtti" COMPILER_SUPPORTS_FNO_RTTI)
+  check_cxx_compiler_flag("-fno-rtti" COMPILER_SUPPORTS_FNO_RTTI)
   if (COMPILER_SUPPORTS_FNO_RTTI)
-    add_definitions(-fno-rtti)
-    message( STATUS "Compile metaSMT tests without RTTI" )
+    add_compile_options(-fno-rtti)
+    message(STATUS "Compile metaSMT tests without RTTI")
   else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} does not support -fno-rtti, compile metaSMT tests with RTTI")
   endif()
 endif()
 
 add_library(boost_test boost_test.cpp)
-link_libraries(boost_test metaSMT)
+target_link_libraries(boost_test PUBLIC metaSMT)
+target_include_directories(boost_test PUBLIC ../src ${metaSMT_INCLUDES} )
 
 if (WIN32)
-  add_definitions("-DBOOST_TEST_INCLUDED") # this is to prevent boost autolink
+  add_compile_definitions("-DBOOST_TEST_INCLUDED") # this is to prevent boost autolink
 endif()
 
 find_program(AWK awk)
@@ -71,10 +70,9 @@ function (add_all_tests prog cfile)
   )
   string(REPLACE "\n" ";" test_cases "${test_cases}")
 
-  foreach(test  ${test_cases})
-    #message(STATUS "${prog}/${test} ${prog} -t ${test}")
-    add_test("${prog}/${test}" ${prog} -t ${test} ${opts_ARGS})
-    set_tests_properties ("${prog}/${test}" PROPERTIES TIMEOUT ${TIMEOUT})
+  foreach(test ${test_cases})
+    add_test(NAME "${prog}/${test}" COMMAND ${prog} -t ${test} ${opts_ARGS})
+    set_tests_properties("${prog}/${test}" PROPERTIES TIMEOUT ${TIMEOUT})
     if(opts_ENVIRONMENT)
       set_tests_properties("${prog}/${test}" PROPERTIES ENVIRONMENT ${opts_ENVIRONMENT})
     endif()
@@ -89,15 +87,15 @@ function (add_test_executable name source )
   foreach( req ${req_REQUIRES} )
     if(NOT ${req} )
       set(req_all 0)
-      # message("UNSATISFIED DEPENDENCY: " ${req} " of " ${name})
     endif(NOT ${req} )
   endforeach( req )
 
   if(req_all)
     add_executable(${name} ${source})
     add_all_tests(${name} ${source} ARGS ${req_ARGS} ENVIRONMENT ${req_ENVIRONMENT})
+    target_link_libraries(${name} PRIVATE boost_test)
     if(req_LIBRARIES)
-      target_link_libraries(${name} metaSMT ${req_LIBRARIES})
+      target_link_libraries(${name} PRIVATE ${req_LIBRARIES})
     endif()
     if(req_PROPERTIES)
       set_target_properties(${name} PROPERTIES ${req_PROPERTIES})
@@ -107,56 +105,45 @@ endfunction(add_test_executable)
 
 add_test_executable( result_wrapper test_result_wrapper.cpp)
 
-add_test_executable( direct_CUDD direct_CUDD.cpp REQUIRES CUDD_FOUND )
+add_test_executable( direct_CUDD direct_CUDD.cpp REQUIRES metaSMT_USE_CUDD )
 add_test_executable( direct_BitBlast_CUDD direct_BitBlast_CUDD.cpp
-  REQUIRES CUDD_FOUND)
+  REQUIRES metaSMT_USE_CUDD)
 add_test_executable(direct_CUDD_Distributed direct_CUDD_Distributed.cpp 
-  REQUIRES CUDD_FOUND)
+  REQUIRES metaSMT_USE_CUDD)
 
 add_test_executable( direct_Boolector direct_Boolector.cpp
-  REQUIRES Boolector_FOUND 
-  PROPERTIES COMPILE_FLAGS "${Boolector_CXXFLAGS}"
-  )
+  REQUIRES metaSMT_USE_Boolector)
 
-add_test_executable( direct_Yices2 direct_Yices2.cpp REQUIRES YICES2_FOUND )
+add_test_executable( direct_Yices2 direct_Yices2.cpp REQUIRES metaSMT_USE_YICES2)
 
-if (NOT Z3_CXXFLAGS)
-  set(Z3_CXXFLAGS "-DZ3_DUMMY_FLAG")
-endif()
-add_test_executable( direct_Z3 direct_Z3.cpp
-  REQUIRES Z3_FOUND
-  PROPERTIES COMPILE_FLAGS "${Z3_CXXFLAGS}"
-  )
+add_test_executable(direct_Z3 direct_Z3.cpp REQUIRES metaSMT_USE_Z3
+  PROPERTIES COMPILE_OPTIONS -DmetaSMT_Z3_ULL_API)
 
-add_test_executable( direct_STP direct_STP.cpp REQUIRES STP_FOUND )
+add_test_executable( direct_STP direct_STP.cpp REQUIRES metaSMT_USE_STP )
 
 if (NOT CVC4_CXXFLAGS)
   set(CVC4_CXXFLAGS "-DCVC4_DUMMY_FLAG")
 endif()
-add_test_executable( direct_CVC4 direct_CVC4.cpp
-  REQUIRES CVC4_FOUND
-  PROPERTIES COMPILE_FLAGS "${CVC4_CXXFLAGS}"
-  )
+add_test_executable(direct_CVC4 direct_CVC4.cpp
+  REQUIRES metaSMT_USE_CVC4
+  PROPERTIES COMPILE_OPTIONS "${CVC4_CXXFLAGS}"
+)
 
-add_test_executable( direct_MiniSAT direct_MiniSAT.cpp
-  REQUIRES MiniSat_FOUND
-  PROPERTIES COMPILE_FLAGS "${MiniSat_CXXFLAGS}"
-  )
+add_test_executable(direct_MiniSAT direct_MiniSAT.cpp
+  REQUIRES metaSMT_USE_MiniSat
+)
 
 add_test_executable( direct_PicoSAT direct_PicoSAT.cpp
-  REQUIRES PicoSAT_FOUND
+  REQUIRES metaSMT_USE_picosat
 )
 
 add_test_executable( direct_Lingeling direct_Lingeling.cpp
-  REQUIRES Lingeling_FOUND
+  REQUIRES metaSMT_USE_lingeling
 )
 
 add_test_executable( direct_Aiger_MiniSAT direct_Aiger_MiniSAT.cpp
-  REQUIRES MiniSat_FOUND Aiger_FOUND
-  PROPERTIES COMPILE_FLAGS "${MiniSat_CXXFLAGS}"
+  REQUIRES metaSMT_USE_MiniSat metaSMT_USE_Aiger
   )
 
 add_test_executable( direct_Aiger_PicoSAT direct_Aiger_PicoSAT.cpp
-  REQUIRES PicoSAT_FOUND Aiger_FOUND )
-
-# vim: ts=2 sw=2 et
+  REQUIRES metaSMT_USE_picosat metaSMT_USE_Aiger )

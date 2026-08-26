@@ -1,0 +1,65 @@
+project(aiger)
+
+cmake_minimum_required(VERSION 3.16)
+
+set(STATIC_OR_SHARED SHARED CACHE STRING "Build STATIC or SHARED libaries")
+
+
+add_library(aiger
+  ${STATIC_OR_SHARED}
+  aiger.c
+)
+target_include_directories(aiger INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+
+# install the target
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+set(aiger_CMAKE_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/aiger)
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/aiger.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aiger
+)
+install(TARGETS aiger EXPORT aiger-targets)
+
+install(
+  EXPORT aiger-targets
+  DESTINATION ${aiger_CMAKE_CONFIG_DIR}
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/aiger-config-version.cmake
+    VERSION 20071012
+    COMPATIBILITY AnyNewerVersion
+)
+
+# Generate the config file content
+set(CONFIG_CONTENT "
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET aiger)
+    include(\"\${CMAKE_CURRENT_LIST_DIR}/aiger-targets.cmake\")
+    add_library(aiger::aiger ALIAS aiger)
+endif()
+
+set(aiger_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include\")
+set(aiger_LIBRARIES aiger::aiger)
+")
+
+# Write the content to the config file
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/aiger-config.cmake.in ${CONFIG_CONTENT})
+
+# Configure package config file
+configure_package_config_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/aiger-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/aiger-config.cmake
+    INSTALL_DESTINATION ${aiger_CMAKE_CONFIG_DIR}
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/aiger-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/aiger-config-version.cmake
+    DESTINATION ${aiger_CMAKE_CONFIG_DIR})

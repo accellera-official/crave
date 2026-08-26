@@ -21,10 +21,12 @@ ELSE(SystemC_LIBRARIES AND SystemC_INCLUDE_DIRS)
   FIND_LIBRARY(SystemC_LIBRARY
     HINTS
       ${SYSTEMC_HOME}/lib
+      ${SYSTEMC_HOME}/lib64
       ${SYSTEMC_HOME}/lib-linux
       ${SYSTEMC_HOME}/lib-linux64
       ${SYSTEMC_HOME}/lib-macos
       $ENV{SYSTEMC_HOME}/lib
+      $ENV{SYSTEMC_HOME}/lib64
       $ENV{SYSTEMC_HOME}/lib-linux
       $ENV{SYSTEMC_HOME}/lib-linux64
 	  $ENV{SYSTEMC_HOME}/lib-mingw64

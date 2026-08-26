@@ -1,0 +1,94 @@
+{
+    "version": 2,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 20,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "Default",
+        "description": "Default configuration with CUDD and Z3",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_CXX_STANDARD": "17",
+          "WITH_SYSTEMC": "ON",
+          "CMAKE_BUILD_TYPE": "Release",
+          "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/install",
+          "SYSTEMC_VERSION": "2.3.4",
+          "metaSMT_USE_CUDD": "ON",
+          "metaSMT_USE_Z3": "ON",
+          "metaSMT_USE_YICES2": "OFF",
+          "metaSMT_USE_Boolector": "OFF",
+          "metaSMT_USE_CVC4": "OFF",
+          "metaSMT_USE_MiniSat": "OFF",
+          "metaSMT_USE_STP": "OFF",
+          "metaSMT_USE_Aiger": "OFF",
+          "metaSMT_USE_lingeling": "OFF",
+          "metaSMT_USE_picosat": "OFF"
+        }
+      },
+      {
+        "name": "Default-SC3",
+        "inherits": "Default",
+        "description": "Default configuration with CUDD, Z3, SystemC 3.0.1, and UVM-SystemC 1.0.6 (beta6 tarball)",
+        "cacheVariables": {
+          "SYSTEMC_VERSION": "3.0.1",
+          "UVM_SYSTEMC_URL": "https://github.com/accellera-official/uvm-systemc/archive/refs/tags/1.0-beta6.tar.gz"
+        }
+      },
+      {
+        "name": "All",
+        "inherits": "Default",
+        "description": "Default configuration plus all optional metaSMT solver backends",
+        "cacheVariables": {
+          "metaSMT_USE_YICES2": "ON",
+          "metaSMT_USE_Boolector": "ON",
+          "metaSMT_USE_CVC4": "ON",
+          "metaSMT_USE_MiniSat": "ON",
+          "metaSMT_USE_STP": "ON",
+          "metaSMT_USE_Aiger": "ON",
+          "metaSMT_USE_lingeling": "ON",
+          "metaSMT_USE_picosat": "ON"
+        }
+      },
+      {
+        "name": "All-SC3",
+        "inherits": "Default-SC3",
+        "description": "Default configuration plus all optional metaSMT solver backends, SystemC 3.0.1, and UVM-SystemC 1.0.6 (beta6 tarball)",
+        "cacheVariables": {
+          "metaSMT_USE_YICES2": "ON",
+          "metaSMT_USE_Boolector": "ON",
+          "metaSMT_USE_CVC4": "ON",
+          "metaSMT_USE_MiniSat": "ON",
+          "metaSMT_USE_STP": "ON",
+          "metaSMT_USE_Aiger": "ON",
+          "metaSMT_USE_lingeling": "ON",
+          "metaSMT_USE_picosat": "ON"
+        }
+      }
+    ],
+    "buildPresets": [
+      {
+        "name": "Default",
+        "configurePreset": "Default",
+        "jobs": 32
+      },
+      {
+        "name": "Default-SC3",
+        "configurePreset": "Default-SC3",
+        "jobs": 32
+      },
+      {
+        "name": "All",
+        "configurePreset": "All",
+        "jobs": 32
+      },
+      {
+        "name": "All-SC3",
+        "configurePreset": "All-SC3",
+        "jobs": 32
+      }
+    ]
+}

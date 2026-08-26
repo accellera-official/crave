@@ -25,12 +25,12 @@
 ##########################################################################################
 
 add_executable(ALU4_experimental ALU4.cpp)
-target_link_libraries(ALU4_experimental ${PROJECT_NAME} ${ALL_EXTERNAL_LIBS})
+target_link_libraries(ALU4_experimental ${PROJECT_NAME})
 add_executable(ALU12_experimental ALU12.cpp)
-target_link_libraries(ALU12_experimental ${PROJECT_NAME} ${ALL_EXTERNAL_LIBS})
+target_link_libraries(ALU12_experimental ${PROJECT_NAME})
 add_executable(ALU16_experimental ALU16.cpp)
-target_link_libraries(ALU16_experimental ${PROJECT_NAME} ${ALL_EXTERNAL_LIBS})
+target_link_libraries(ALU16_experimental ${PROJECT_NAME})
 add_executable(ALU24_experimental ALU24.cpp)
-target_link_libraries(ALU24_experimental ${PROJECT_NAME} ${ALL_EXTERNAL_LIBS})
+target_link_libraries(ALU24_experimental ${PROJECT_NAME})
 add_executable(ALU32_experimental ALU32.cpp)
-target_link_libraries(ALU32_experimental ${PROJECT_NAME} ${ALL_EXTERNAL_LIBS})
+target_link_libraries(ALU32_experimental ${PROJECT_NAME})

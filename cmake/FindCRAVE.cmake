@@ -7,8 +7,7 @@
 #  CRAVE_INCLUDE_DIRS - the CRAVE include directory and include directories of all dependencies
 #  CRAVE_LIBRARIES - Link these to use CRAVE. Contains CRAVE and dependencies
 
-SET(crave_DIR ${PROJECT_SOURCE_DIR}/crave/build/root/share/crave/)
-find_package(crave QUIET)
+find_package(crave CONFIG QUIET)
 IF(crave_FOUND)
   SET(CRAVE_FOUND TRUE)
   SET(CRAVE_INCLUDE_DIRS ${crave_INCLUDE_DIR})
@@ -26,4 +25,3 @@ ELSE(CRAVE_FOUND)
 ENDIF(CRAVE_FOUND)
 
 MARK_AS_ADVANCED(CRAVE_INCLUDE_DIRS CRAVE_LIBRARIES)
-

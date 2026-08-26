@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+
+find_dependency(SystemCLanguage REQUIRED)
+find_dependency(crave REQUIRED)
+find_dependency(accellera-uvm-systemc REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/crave2uvm-targets.cmake")
+
+set(crave2uvm_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include")
+set(crave2uvm_lIBRARIES crave2uvm::crave2uvm)

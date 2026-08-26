@@ -60,14 +60,19 @@ namespace metaSMT {
         {
           //          if ( in_use == USED )
           //            throw std:runtime_error ("Picosat already in use. Only single instances supported."); 
-
-          picosat_init (); 
+          solver_ = picosat_init ();
+          if (!solver_) {
+            throw std::runtime_error("picosat_init returned null");
+          }
           //          in_use = USED;
         }
 
         ~PicoSAT ()
         {
-          picosat_reset (); 
+          if (solver_) {
+            picosat_reset (solver_);
+            solver_ = nullptr;
+          }
           //         in_use = UNUSED;
         }
 
@@ -80,8 +85,8 @@ namespace metaSMT {
         void clause ( std::vector < result_type > const& clause)
         {
           BOOST_FOREACH ( result_type const& lit, clause )
-            picosat_add ( toLit ( lit ) );
-          picosat_add ( 0 ); 
+            picosat_add ( solver_, toLit ( lit ) );
+          picosat_add ( solver_, 0 ); 
         }
 
         void command ( addclause_cmd const&, std::vector < result_type > const& cls )
@@ -92,19 +97,19 @@ namespace metaSMT {
 
         void assertion ( result_type lit )
         {
-          picosat_add ( toLit ( lit ) ); 
-          picosat_add ( 0 ); 
+          picosat_add ( solver_, toLit ( lit ) ); 
+          picosat_add ( solver_, 0 ); 
         }
 
         void assumption ( result_type lit )
         {
-          picosat_assume ( toLit ( lit ) ); 
+          picosat_assume ( solver_, toLit ( lit ) ); 
         }
 
 
         bool solve ( )
         {
-          switch (picosat_sat (-1))
+          switch (picosat_sat (solver_, -1))
           {
             case PICOSAT_UNSATISFIABLE:
               return false;
@@ -120,7 +125,7 @@ namespace metaSMT {
         result_wrapper read_value ( result_type lit )
         {
 
-          switch ( picosat_deref ( toLit ( lit ) ) )
+          switch ( picosat_deref ( solver_, toLit ( lit ) ) )
           {
             case -1:
               return result_wrapper ( '0' );
@@ -137,6 +142,7 @@ namespace metaSMT {
       private:
         //         enum { UNUSED, USED }; 
         //         static int in_use = UNUSED; 
+        ::PicoSAT * solver_ = nullptr;
     };
   } /* solver */
 

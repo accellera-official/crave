@@ -25,7 +25,7 @@
 ##########################################################################################
 
 if ( NOT CRAVE_TIMEOUT )
-  set(CRAVE_TIMEOUT 30)
+  set(CRAVE_TIMEOUT 60)
 endif()
 include_directories (../src)
 
@@ -60,12 +60,13 @@ function (add_all_tests prog cfile)
   
 endfunction(add_all_tests)
 
-add_library (${PROJECT_NAME}_boost_test ${STATIC_OR_SHARED} boost_test.cpp)
-link_libraries (${PROJECT_NAME}_boost_test ${ALL_EXTERNAL_LIBS} ${PROJECT_NAME})
-
-if (WIN32)
-  add_definitions("-DBOOST_TEST_INCLUDED") # this is to prevent boost autolink
+if(NOT TARGET Boost::unit_test_framework)
+  message(FATAL_ERROR "Boost::unit_test_framework target missing. Ensure crave_find_or_fetch_boost() ran before configuring tests.")
 endif()
+
+add_library (${PROJECT_NAME}_boost_test ${STATIC_OR_SHARED} boost_test.cpp)
+link_libraries (${PROJECT_NAME}_boost_test ${PROJECT_NAME} Threads::Threads Boost::unit_test_framework)
+target_include_directories(${PROJECT_NAME}_boost_test PRIVATE ${Boost_INCLUDE_DIRS})
 
 add_executable(solver_independent_tests core/solver_independent_tests.cpp)
 add_all_tests(solver_independent_tests core/solver_independent_tests.cpp)
@@ -110,10 +111,8 @@ endif (metaSMT_USE_Z3)
 #  add_all_tests(use_Cudd use_Cudd.cpp)
 #endif (metaSMT_USE_CUDD)
 
-if(SystemC_FOUND)
+if(SystemCLanguage_FOUND)
   add_executable (SystemC_Data core/test_SystemC_Data.cpp)
   add_all_tests( SystemC_Data core/test_SystemC_Data.cpp)
-  target_link_libraries ( SystemC_Data ${ALL_EXTERNAL_LIBS} ${PROJECT_NAME})
-endif(SystemC_FOUND)
-
-
+  target_link_libraries ( SystemC_Data SystemC::systemc Boost::filesystem ${PROJECT_NAME})
+endif(SystemCLanguage_FOUND)

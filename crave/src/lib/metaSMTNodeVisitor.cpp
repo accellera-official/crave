@@ -52,7 +52,7 @@ class BoolectorSolver : public metaSMT::solver::Boolector {
  public:
   BoolectorSolver() {
 #ifndef metaSMT_BOOLECTOR_1_API
-    boolector_set_opt(_btor, "rewrite_level", 1);
+    boolector_set_opt(_btor, BTOR_OPT_REWRITE_LEVEL, 1);
 //    assert(boolector_set_sat_solver_minisat(_btor));
 #endif
   }
