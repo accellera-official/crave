@@ -607,4 +607,30 @@ BOOST_AUTO_TEST_CASE(divide) {
 
   VariableDefaultSolver::bypass_constraint_analysis = false;
 }
+
+struct s_not_on_byte : public crv_sequence_item {
+    s_not_on_byte(crave::crv_object_name name = "c")
+    {}
+
+    crave::crv_variable<unsigned int> byte_as_int;
+
+    crave::crv_constraint c_valid_c {
+        byte_as_int() < 256,
+        !(byte_as_int() & (byte_as_int() - 1)) // !!! HvdS (2a): segfault
+      };
+};
+
+bool not_on_byte_valid (int value) {
+    return (value == 0 || value == 1 || value == 2 || value == 4 || value == 8 || 
+           value == 16 || value == 32 || value == 64 || value == 128);
+}
+BOOST_AUTO_TEST_CASE(not_on_byte) {
+  s_not_on_byte item("item");
+
+  unsigned cnt = 0u;
+  while (item.randomize() && cnt < 300) {
+    BOOST_CHECK(not_on_byte_valid(item.byte_as_int));
+    std::cout << "#" << cnt++ << ": result: byte_as_int=" << item.byte_as_int <<  std::endl;
+  }
+}
 BOOST_AUTO_TEST_SUITE_END()
