@@ -52,6 +52,9 @@ find_package_handle_standard_args(UVM-SystemC
     UVM_SystemC_LIBRARY
 )
 
+# find_package_handle_standard_args() reports the result as UVM-SystemC_FOUND
+set(UVM_SystemC_FOUND ${UVM-SystemC_FOUND})
+
 if(UVM_SystemC_FOUND AND NOT TARGET UVM::uvm-systemc)
   add_library(UVM::uvm-systemc UNKNOWN IMPORTED)
   set_target_properties(UVM::uvm-systemc PROPERTIES
